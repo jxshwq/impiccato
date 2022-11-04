@@ -31,7 +31,7 @@ func main() {
 		randomIndex := rand.Intn(len(wordList))
 		parola = wordList[randomIndex]
 		fmt.Println("Perfetto, abbiamo generato una parola casuale, hai 10 vite a disposizione, Buona Fortuna!")
-	} else {
+	} else if mod == 2 {
 		var err error
 		parola, err = getParola();
 		if err != nil {
@@ -39,6 +39,9 @@ func main() {
 			os.Exit(0)	
 		} 
 		fmt.Println("Perfetto, Giocatore 2, hai 10 vite a disposizione, Buona Fortuna!")
+	} else {
+		fmt.Println("Sei un coglione, ti avevo detto di mettere o 1 o 2.")
+		os.Exit(0)
 	}
 	
 	tentativi := 10
