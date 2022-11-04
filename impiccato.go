@@ -4,25 +4,47 @@ import (
 	"fmt"
 	"golang.org/x/term"
 	"os"
+	"time"
+	"math/rand"
+	"strings"
 )
 
 var mappa map[int]bool
 
 func main() {
 
+	var parola string
+	var mod int
+
+	rand.Seed(time.Now().UnixNano())
+
+	fmt.Println("Ciao! Vuoi giocare in modalità singola o multigiocatore?")
+	fmt.Println("1) Modalità giocatore singolo.\n2) Modalità multigiocatore.\nInserisci 1 o 2")
+	fmt.Scan(&mod)
+	if mod == 1 {
+		wordBuffer, err := os.ReadFile("./listaparola.txt")
+		if err != nil {
+			fmt.Println("C'è stato un errore uagliu")
+			os.Exit(0) 
+		}
+		wordList := strings.Split(string(wordBuffer), "\n")
+		randomIndex := rand.Intn(len(wordList))
+		parola = wordList[randomIndex]
+		fmt.Println("Perfetto, abbiamo generato una parola casuale, hai 10 vite a disposizione, Buona Fortuna!")
+	} else {
+		var err error
+		parola, err = getParola();
+		if err != nil {
+			fmt.Println("C'è stato un errore uagliu")
+			os.Exit(0)	
+		} 
+		fmt.Println("Perfetto, Giocatore 2, hai 10 vite a disposizione, Buona Fortuna!")
+	}
+	
 	tentativi := 10
 	isComplete := false 
-	parola, err := getParola();
-
-	if err != nil {
-		fmt.Println("C'è stato un errore uagliu")
-		os.Exit(0)	
-	} 
-
 	parolaLen := len(parola)
 	mappa = initialize(parolaLen)
-
-	fmt.Println("Perfetto, Giocatore 2, hai 10 vite a disposizione, Buona Fortuna!")
 	printParola(parola, mappa)
 
 	for (tentativi > 0) && (!isComplete) {
@@ -58,6 +80,8 @@ func main() {
 
 	if isComplete {
 		fmt.Println("Complimenti hai completato la parola!")
+	} else {
+		fmt.Println("La parola era: ", parola)
 	}
 }
 
@@ -114,7 +138,7 @@ func getUserInput() string {
 	
 	var userInput string
 
-	fmt.Println("Inserisci una lettera da azzeccare o la parola intera: ")
+	fmt.Print("Inserisci una lettera da azzeccare o la parola intera: ")
 	fmt.Scan(&userInput)
 	
 	return userInput
